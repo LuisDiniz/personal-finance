@@ -1,0 +1,7 @@
+{
+    "name": "controle-financeiro",
+    "version": "1.0.0",
+    "dependencies": {
+        "mssql": "^4.2.1"
+    }
+}
