@@ -1,3 +1,7 @@
+CREATE DATABASE ControleFinanceiro
+
+USE ControleFinanceiro
+
 -- Scripts to create all tables
 BEGIN
 
@@ -56,8 +60,10 @@ BEGIN
             DescricaoOriginal   VARCHAR(128)                NOT NULL,
             [Data]              DATE                        NOT NULL    CONSTRAINT DF_Lancamento_Data  DEFAULT GETDATE(),
             Valor               MONEY                       NOT NULL,
+            ContaId             INT                         NOT NULL,                         
             CategoriaId         INT,                         
             CONSTRAINT PK_LancamentoId                      PRIMARY KEY (LancamentoId),
+            CONSTRAINT FK_Lancamento_Conta                  FOREIGN KEY (ContaId) REFERENCES Conta(ContaId),
             CONSTRAINT FK_Lancamento_Categoria              FOREIGN KEY (CategoriaId) REFERENCES Categoria(CategoriaId)            
         )
     END    
