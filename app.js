@@ -2,7 +2,9 @@
 
 // Imports
 const interImport = require('./import/Inter');
+const formatUtil = require('./util/formatUtil');
 const LancamentoRepository = require('./repository/lancamentoRepository');
+const ContaRepository = require('./repository/contaRepository');
 const sql = require('./util/db');
 // Constantes
 const consultarConta = `SELECT * FROM Conta`;
@@ -13,39 +15,41 @@ async function main() {
     let result = {};
 
     const lancamentoRepository = new LancamentoRepository();
+    const contaRepository = new ContaRepository();
 
     // Teste de conexão com o banco de dados
     console.log(`\nContas:\n`);
-    result = await sql.query(consultarConta);
+    result = await contaRepository.findAll();
     for (let record of result.recordset) {
         console.log(record);            
     }
-    console.log(`\nLançamentos:\n`);
-    result = await lancamentoRepository.findAll();
-    for (let record of result.recordset)
-        console.log(record);            
+
+    // console.log(`\nLançamentos:\n`);
+    // result = await lancamentoRepository.findAll();
+    // for (let record of result.recordset)
+    //     console.log(record);            
 
     // Teste importar extrato banco Inter
     let retorno = await interImport.importFileLancamento(filePath);
-    // Remover da lista lancamentos que já existem no banco    
-    for (let lancamento of retorno.lancamentos)
-        if (lancamentoRepository.findLancamentoDuplicado(lancamento.descricao.replace(/[']/g, ''), lancamento.valor, lancamento.data))
-            retorno.lancamentos.pop(lancamento);
-    // Persiste as informações
-    // contaRepository.atualizarSaldo(contaId, retorno.saldo);
-    // Insere os novos lancamentos no banco
+    // Prepara a lista lancamentos que não existem no banco para serem inseridos    
+    let lancamentos = [];
     for (let lancamento of retorno.lancamentos){
+        let encontrou = await lancamentoRepository.findLancamentoDuplicado(lancamento.descricao.replace(/[']/g, ''), lancamento.valor, lancamento.data);
+        if (!encontrou)
+            lancamentos.push(lancamento);
+    }
+    // Persiste as informações
+    let contaId = 2; // Itau
+    await contaRepository.atualizarSaldo(contaId, formatUtil.formatReal(retorno.saldo));
+    // Insere os novos lancamentos no banco
+    for (let lancamento of lancamentos){
         let descricaoOriginal = lancamento.descricao.replace(/[']/g, '');
         let valor = lancamento.valor;
         let data = lancamento.data;        
-        lancamentoRepository.save(descricaoOriginal, valor, data);
+        await lancamentoRepository.save(contaId, descricaoOriginal, valor, data);
     }
        
-    // console.log(`\nLançamento:\n`);
-    // result = await sql.query(consultarLancamentos);
-    // for (let record of result.recordset) {
-    //     console.log(record);            
-    // }
+    console.log(`Fim da execução`);
 }
 
 main();
