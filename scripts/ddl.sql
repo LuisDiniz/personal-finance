@@ -1,6 +1,13 @@
-CREATE DATABASE ControleFinanceiro
+IF NOT EXISTS (
+                SELECT 1
+                FROM sys.databases
+                WHERE name = 'PersonalFinance'
+               )
+BEGIN
+    CREATE DATABASE PersonalFinance
+END
 
-USE ControleFinanceiro
+USE PersonalFinance
 
 -- Scripts to create all tables
 BEGIN
