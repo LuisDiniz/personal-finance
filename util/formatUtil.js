@@ -2,19 +2,28 @@
 
 /**
  * Remove máscara da moeda "Real" e formata para inserir no banco de dados. 
- * @param {*} string Valor com máscara da moeda "Real" 
+ * @param {*} valor Valor com máscara da moeda "Real" 
  */
-exports.formatReal = (string) => {
+exports.formatReal = (valor) => {
 
     // Remove máscara do Real
-    string = string.replace(/(R\$)/,'');
+    valor = valor.replace(/(R\$)/,'');
     // Remove espaços em brancho
-    string = string.replace(/\s/g,'');
+    valor = valor.replace(/\s/g,'');
     // Troca ',' por '.'
-    string = string.replace(/[,]/,'.');
+    valor = valor.replace(/[,]/,'.');
 
-    let valor = parseFloat(string);
+    let valorFormatado = parseFloat(valor);
 
-    return valor;
+    return valorFormatado;
 
 }
+
+/**
+ * Remove aspas simples do texto informado.
+ * @param {*} texto String que deve ser formatada.
+ */
+
+ exports.removerAspasSimples = (texto) => {
+     return texto.replace(/[']/g, '');
+ }
