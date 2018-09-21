@@ -8,18 +8,18 @@ module.exports = class LancamentoRepository {
         return await sql.query(`SELECT * FROM Lancamento`);
     }
 
-    async findLancamentoDuplicado (descricaoOrignal, valor, data) {
+    async findLancamentoDuplicado (lancamento) {
         let success = false;
         let result = await sql.query(`SELECT 1 
                                       FROM Lancamento
-                                      WHERE DescricaoOriginal = '${descricaoOrignal}'
-                                      AND Valor = ${valor}
-                                      AND Data = CONVERT(DATE, '${data}', 103)`);
+                                      WHERE DescricaoOriginal = '${lancamento.descricaoOrignal}'
+                                      AND Valor = ${lancamento.valor}
+                                      AND Data = CONVERT(DATE, '${lancamento.data}', 103)`);
         success = result.recordset.length > 0 ? true : false;
         return success;                              
     }
 
-    async save (contaId, descricaoOriginal, valor, data, categoriaId, descricao) {
+    async save (lancamento) {
         await sql.query(`INSERT INTO Lancamento (
                             ContaId,
                             Descricao,
@@ -29,12 +29,12 @@ module.exports = class LancamentoRepository {
                             CategoriaId
                         )
                         VALUES (
-                            ${contaId},
-                            '${descricao ? descricao : descricaoOriginal}',
-                            '${descricaoOriginal}',
-                            ${valor},
-                            CONVERT (DATE, '${data}', 103),
-                            ${categoriaId ? categoriaId : null}
+                            ${lancamento.contaId},
+                            '${lancamento.descricao !== `` ? lancamento.descricao : lancamento.descricaoOriginal}',
+                            '${lancamento.descricaoOriginal}',
+                            ${lancamento.valor},
+                            CONVERT (DATE, '${lancamento.data}', 103),
+                            ${lancamento.categoriaId}
                         )`);
     }    
 

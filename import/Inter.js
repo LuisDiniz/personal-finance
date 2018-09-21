@@ -3,7 +3,7 @@
 // Imports
 const fs = require('fs');
 const formatUtil = require('../util/formatUtil');
-
+const Lancamento = require('../model/lancamento');
 // Expressão regular para encontrar o campo de data no arquivo
 let regexpData = /data/i;
 let regexpSaldo = /saldo/i;
@@ -19,7 +19,7 @@ let achouCabecalho = false;
 // Variáveis para armazenar os valores lidos do arquivo
 let saldo = 0;
 
-async function importFileLancamento(filePath) {
+async function importFileLancamento(filePath, contaId) {
 
     // lê o arquivo
     let arquivo = fs.readFileSync(filePath);
@@ -29,12 +29,12 @@ async function importFileLancamento(filePath) {
         let campos = linha.split(";");
         if (achouSaldo){
             if (campos.length > 1){ 
-                if (achouCabecalho){            
-                    let lancamento = {
-                        "data": campos[indiceData],
-                        "descricao": campos[indiceDescricao],
-                        "valor": formatUtil.formatReal(campos[indiceValor])
-                    }
+                if (achouCabecalho){   
+                    let lancamento = new Lancamento();
+                    lancamento.data = campos[indiceData];
+                    lancamento.descricaoOriginal = campos[indiceDescricao];
+                    lancamento.valor = formatUtil.formatReal(campos[indiceValor]);
+                    lancamento.contaId = contaId;
                     lancamentos.push(lancamento);
                 }
                 else
@@ -54,7 +54,6 @@ async function importFileLancamento(filePath) {
         "lancamentos": lancamentos
     }
 
-    //console.log(lancamentos);
     return retorno; 
 
 }
