@@ -3,6 +3,7 @@
 module.exports = class Lancamento {
 
     constructor(){
+        this.lancamentoId = null;
         this.descricao = '';
         this.descricaoOriginal = '';
         this.valor = 0.00;
