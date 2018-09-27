@@ -24,6 +24,16 @@ BEGIN
             VALUES ('Itaú')
         END  
 
+        IF NOT EXISTS (
+                        SELECT 1 
+                        FROM Conta 
+                        WHERE Descricao = 'Inter'
+                    )
+        BEGIN
+            INSERT INTO Conta (Descricao)
+            VALUES ('Inter')
+        END          
+
     END 
 
     -- CategoriaGrupo
@@ -78,6 +88,17 @@ BEGIN
             INSERT INTO CategoriaGrupo
             VALUES ('Aposentadoria')
         END
+
+        IF NOT EXISTS (
+                        SELECT 1 
+                        FROM CategoriaGrupo 
+                        WHERE Descricao = 'Remuneração'
+                    )
+        BEGIN
+            INSERT INTO CategoriaGrupo
+            VALUES ('Remuneração')
+        END
+
     END
 
 END

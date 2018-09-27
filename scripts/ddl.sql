@@ -33,7 +33,7 @@ BEGIN
     BEGIN
         CREATE TABLE Categoria (
             CategoriaId             INT             IDENTITY    NOT NULL,
-            CategoriaGrupoId        INT                         NOT NULL,
+            CategoriaGrupoId        INT                         NULL,
             Descricao               VARCHAR(128)                NOT NULL,
             CONSTRAINT PK_CategoriaId                           PRIMARY KEY (CategoriaId),
             CONSTRAINT FK_Categoria_CategoriaGrupoId            FOREIGN KEY (CategoriaGrupoId) REFERENCES Categoria(CategoriaId)
