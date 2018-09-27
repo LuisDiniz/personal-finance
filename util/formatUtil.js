@@ -10,6 +10,8 @@ exports.formatReal = (valor) => {
     valor = valor.replace(/(R\$)/,'');
     // Remove espaços em brancho
     valor = valor.replace(/\s/g,'');
+    // Remover '.'
+    valor = valor.replace(/[.]/,'');
     // Troca ',' por '.'
     valor = valor.replace(/[,]/,'.');
 
