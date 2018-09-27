@@ -12,7 +12,7 @@ module.exports = class LancamentoRepository {
         let success = false;
         let result = await sql.query(`SELECT 1 
                                       FROM Lancamento
-                                      WHERE DescricaoOriginal = '${lancamento.descricaoOrignal}'
+                                      WHERE DescricaoOriginal = '${lancamento.descricaoOriginal}'
                                       AND Valor = ${lancamento.valor}
                                       AND Data = CONVERT(DATE, '${lancamento.data}', 103)`);
         success = result.recordset.length > 0 ? true : false;
