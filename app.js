@@ -16,12 +16,13 @@ async function main() {
     const lancamentoController = new LancamentoController();
     const contaRepository = new ContaRepository();
     const CONTA_ID_ITAU = 2;
+    const CONTA_ID_INTER = 3;
 
     // Teste importar extrato banco Inter
-    let retorno = await interImport.importFileLancamento(filePath, CONTA_ID_ITAU);    
+    let retorno = await interImport.importFileLancamento(filePath, CONTA_ID_INTER);    
     await lancamentoController.inserirLancamentos(retorno.lancamentos);
     // Persiste as informações
-    await contaRepository.atualizarSaldo(contaId, formatUtil.formatReal(retorno.saldo));
+    await contaRepository.atualizarSaldo(CONTA_ID_INTER, formatUtil.formatReal(retorno.saldo));
        
     console.log(`Fim da execução`);
 }
